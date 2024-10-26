@@ -8,12 +8,11 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+SUPABASE_KEY = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
 
 # Initialize Supabase client
-supabase = create_client(
-    'https://afotjpglixpezmmbvujc.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb3RqcGdsaXhwZXptbWJ2dWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk5Njc2MzUsImV4cCI6MjA0NTU0MzYzNX0.vV4muwqOKn0SQ1O3FaGdnct8ZULRhxZSCoU9mWG07XM'
-)
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 class RestaurantDataGenerator:
     def __init__(self, start_date=None, days=90):
