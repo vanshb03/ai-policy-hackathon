@@ -25,9 +25,9 @@ export default function EstablishmentMap() {
   const [establishments, setEstablishments] = useState<Establishment[]>([]);
   const [selectedEstablishment, setSelectedEstablishment] = useState<Establishment | null>(null);
   const [viewState, setViewState] = useState({
-    latitude: 40.7128,
-    longitude: -74.0060,
-    zoom: 11
+    latitude: 38.8977,  // DC coordinates
+    longitude: -77.0365,
+    zoom: 13
   });
 
   // Search and filter states
