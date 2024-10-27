@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { AlertTriangle, ArrowRight, BarChart2, Shield, Globe, Users, Zap, ArrowUpRight } from 'lucide-react';
+import { AlertTriangle, ArrowRight, BarChart2, Shield, Globe, Users, Clock, Zap, ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function LandingPage() {
@@ -57,10 +57,10 @@ export default function LandingPage() {
           <div className="w-full max-w-4xl mt-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 p-8 rounded-2xl bg-background/50 backdrop-blur-sm border">
               {[
-                { icon: Globe, text: "Global Coverage", stat: "150+ Countries" },
-                { icon: Shield, text: "FDA Compliant", stat: "100%" },
-                { icon: Users, text: "Active Users", stat: "10,000+" },
-                { icon: AlertTriangle, text: "Response Time", stat: "< 15 min" }
+                { icon: Globe, text: "Expanding Coverage", stat: "13 states covered" },
+                { icon: Shield, text: "FDA/HIPAA Compliant", stat: "100%" },
+                { icon: Clock, text: "Timezone Monitoring", stat: "24/7" },
+                { icon: AlertTriangle, text: "Continuous Monitoring", stat: "Every 10 seconds" }
               ].map(({ icon: Icon, text, stat }, i) => (
                 <div key={i} className="flex flex-col items-center gap-2 p-4">
                   <Icon className="h-5 w-5 text-primary" />
@@ -76,7 +76,7 @@ export default function LandingPage() {
       {/* Features Section */}
       <div className="container mx-auto px-6 py-24">
         <div className="text-center mb-16 space-y-4">
-          <div className="text-primary font-medium">Features</div>
+          <div className="text-primary font-medium text-xl">Features</div>
           <h2 className="text-3xl md:text-4xl font-bold">Everything you need to stay ahead</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Comprehensive tools for food safety professionals, powered by advanced AI and real-time analytics
@@ -101,9 +101,9 @@ export default function LandingPage() {
               description: "Prioritize risks and allocate resources effectively with our ML-powered risk scoring system."
             }
           ].map(({ icon: Icon, title, description }, i) => (
-            <div key={i} className="group relative">
+            <div key={i} className="group relative h-full">
               <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative flex flex-col space-y-4 p-8 bg-card rounded-3xl border hover:border-primary transition-colors">
+              <div className="relative flex flex-col space-y-4 p-8 bg-card rounded-3xl border hover:border-primary transition-colors h-full">
                 <div className="p-3 w-fit rounded-full bg-primary/10">
                   <Icon className="h-6 w-6 text-primary" />
                 </div>
@@ -139,6 +139,13 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
+      {/* Footer Section (unfinished) 
+      <div>
+        <footer className="container mx-auto px-6 py-12 mt-8 text-center text-gray-200 bg-gradient-to-tl from-gray-700 to-gray-500 p-12">
+          <p></p>
+        </footer>
+      </div>
+      */}
     </div>
   );
 }
