@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { AlertTriangle, ArrowRight, BarChart2, Shield, Globe, Users, Zap, ArrowUpRight } from 'lucide-react';
+import { AlertTriangle, ArrowRight, BarChart2, Shield, Globe, Users, Clock, Zap, ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function LandingPage() {
@@ -57,10 +57,10 @@ export default function LandingPage() {
           <div className="w-full max-w-4xl mt-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 p-8 rounded-2xl bg-background/50 backdrop-blur-sm border">
               {[
-                { icon: Globe, text: "Global Coverage", stat: "150+ Countries" },
-                { icon: Shield, text: "FDA Compliant", stat: "100%" },
-                { icon: Users, text: "Active Users", stat: "10,000+" },
-                { icon: AlertTriangle, text: "Response Time", stat: "< 15 min" }
+                { icon: Globe, text: "Expanding Coverage", stat: "13 states covered" },
+                { icon: Shield, text: "FDA/HIPAA Compliant", stat: "100%" },
+                { icon: Clock, text: "Timezone Monitoring", stat: "24/7" },
+                { icon: AlertTriangle, text: "Continuous Monitoring", stat: "Every 10 seconds" }
               ].map(({ icon: Icon, text, stat }, i) => (
                 <div key={i} className="flex flex-col items-center gap-2 p-4">
                   <Icon className="h-5 w-5 text-primary" />
