@@ -11,8 +11,8 @@ load_dotenv()
 
 # Initialize Supabase client
 supabase = create_client(
-    'https://afotjpglixpezmmbvujc.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmb3RqcGdsaXhwZXptbWJ2dWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk5Njc2MzUsImV4cCI6MjA0NTU0MzYzNX0.vV4muwqOKn0SQ1O3FaGdnct8ZULRhxZSCoU9mWG07XM'
+    os.getenv('NEXT_PUBLIC_SUPABASE_URL'),
+    os.getenv('NEXT_PUBLIC_SUPABASE_ANON_KEY')
 )
 
 class RestaurantDataGenerator:
@@ -55,16 +55,76 @@ class RestaurantDataGenerator:
         }
         
         self.symptoms = [
-            "nausea", "vomiting", "diarrhea", "abdominal pain", "fever",
-            "headache", "muscle aches", "fatigue", "dehydration"
+    "nausea", "vomiting", "diarrhea", "abdominal pain", "fever",
+    "headache", "muscle aches", "fatigue", "dehydration",
+    "stomach cramps", "bloody diarrhea", "chills", "loss of appetite",
+    "dizziness", "weakness", "sweating", "bloating", "gas",
+    "low-grade fever", "dry mouth", "malaise", "heartburn",
+    "difficulty swallowing", "excessive thirst"
         ]
-        
+
+        # Updated cities with bounding boxes that exclude water bodies
         self.cities = [
-            {"city": "New York", "state": "NY", "base_lat": 40.7128, "base_lng": -74.0060, "zip_prefix": "100"},
-            {"city": "Los Angeles", "state": "CA", "base_lat": 34.0522, "base_lng": -118.2437, "zip_prefix": "900"},
-            {"city": "Chicago", "state": "IL", "base_lat": 41.8781, "base_lng": -87.6298, "zip_prefix": "606"},
-            {"city": "Houston", "state": "TX", "base_lat": 29.7604, "base_lng": -95.3698, "zip_prefix": "770"},
-            {"city": "Phoenix", "state": "AZ", "base_lat": 33.4484, "base_lng": -112.0740, "zip_prefix": "850"}
+                {
+            "city": "Washington",
+            "state": "DC",
+            "zip_prefix": "200",
+            "bounds": {
+                # DC downtown/Georgetown, avoiding Potomac River
+                "lat_min": 38.8900,
+                "lat_max": 38.9100,
+                "lng_min": -77.0500,
+                "lng_max": -77.0300
+            }
+        },
+        {
+            "city": "Arlington",
+            "state": "VA",
+            "zip_prefix": "222",
+            "bounds": {
+                # Clarendon/Ballston corridor
+                "lat_min": 38.8800,
+                "lat_max": 38.8900,
+                "lng_min": -77.1100,
+                "lng_max": -77.0900
+            }
+        },
+        {
+            "city": "Alexandria",
+            "state": "VA",
+            "zip_prefix": "223",
+            "bounds": {
+                # Old Town, avoiding Potomac
+                "lat_min": 38.8000,
+                "lat_max": 38.8200,
+                "lng_min": -77.0500,
+                "lng_max": -77.0400
+            }
+        },
+        {
+            "city": "Bethesda",
+            "state": "MD",
+            "zip_prefix": "208",
+            "bounds": {
+                # Downtown Bethesda
+                "lat_min": 38.9800,
+                "lat_max": 38.9900,
+                "lng_min": -77.1000,
+                "lng_max": -77.0900
+            }
+        },
+        {
+            "city": "Silver Spring",
+            "state": "MD",
+            "zip_prefix": "209",
+            "bounds": {
+                # Downtown Silver Spring
+                "lat_min": 38.9900,
+                "lat_max": 39.0000,
+                "lng_min": -77.0300,
+                "lng_max": -77.0200
+            }
+        }
         ]
 
     def generate_address(self) -> str:
@@ -73,29 +133,42 @@ class RestaurantDataGenerator:
         street_names = ["Main", "Market", "Commercial", "Broadway", "Washington", "Park"]
         return f"{street_numbers} {random.choice(street_names)} {random.choice(street_types)}"
 
+    def generate_coordinates(self, city_data):
+        """Generate coordinates within the specified bounds for a city"""
+        bounds = city_data["bounds"]
+        lat = random.uniform(bounds["lat_min"], bounds["lat_max"])
+        lng = random.uniform(bounds["lng_min"], bounds["lng_max"])
+        return round(lat, 6), round(lng, 6)
+
     def generate_and_insert_establishments(self, num_establishments=100):
         establishments = []
         establishment_ids = []
         chains = list(self.restaurant_data.keys())
         
-        for _ in range(num_establishments):
-            chain = random.choice(chains)
-            city_data = random.choice(self.cities)
+        # Distribute establishments across cities
+        establishments_per_city = num_establishments // len(self.cities)
+        remaining = num_establishments % len(self.cities)
+        
+        for city_data in self.cities:
+            # Calculate number of establishments for this city
+            city_establishments = establishments_per_city + (1 if remaining > 0 else 0)
+            remaining = max(0, remaining - 1)
             
-            lat = city_data["base_lat"] + random.uniform(-0.1, 0.1)
-            lng = city_data["base_lng"] + random.uniform(-0.1, 0.1)
-            postal_code = f"{city_data['zip_prefix']}{random.randint(10, 99)}"
-            
-            establishment = {
-                "name": chain,
-                "address": self.generate_address(),
-                "city": city_data["city"],
-                "state": city_data["state"],
-                "postal_code": postal_code,
-                "latitude": round(lat, 8),
-                "longitude": round(lng, 8)
-            }
-            establishments.append(establishment)
+            for _ in range(city_establishments):
+                chain = random.choice(chains)
+                lat, lng = self.generate_coordinates(city_data)
+                postal_code = f"{city_data['zip_prefix']}{random.randint(10, 99)}"
+                
+                establishment = {
+                    "name": chain,
+                    "address": self.generate_address(),
+                    "city": city_data["city"],
+                    "state": city_data["state"],
+                    "postal_code": postal_code,
+                    "latitude": lat,
+                    "longitude": lng
+                }
+                establishments.append(establishment)
         
         # Insert establishments in batches of 50
         for i in range(0, len(establishments), 50):
